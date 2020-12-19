@@ -5,7 +5,7 @@ phases:
     commands:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - IMAGE_TAG=${COMMIT_HASH}
       - REPO_URL=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
   build:
     commands:
@@ -15,3 +15,6 @@ phases:
     commands:
       - docker push $REPO_URL:$IMAGE_TAG
       - docker push $REPO_URL:latest
+      - echo "$SSH_KEY" > ~/.ssh/id_rsa
+      - chmod 400 ~/.ssh/id_rsa
+      - ssh -o StrictHostKeyChecking=no ubuntu@$INSTANCE "/home/ubuntu/app/deploy.sh $IMAGE_TAG"
