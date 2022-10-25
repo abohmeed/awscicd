@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:13-alpine
 WORKDIR app
 ADD index.js package.json ./
 RUN npm install
