@@ -4,7 +4,7 @@ phases:
   install:
     commands:
       - apt update
-      - apt install -y nodejs npm nodejs-dev node-gyp libssl1.0-dev
+      - apt install -y nodejs npm nodejs-dev node-gyp libssl1.1
       - npm install 
   build:
     commands:
